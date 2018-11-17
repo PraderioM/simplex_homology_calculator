@@ -14,8 +14,10 @@ def read_file(file_path: str) -> List[Face]:
     with open(file_path, 'r') as input_file:
         # Join all lines separating different lines with a semicolon.
         lines = input_file.readlines()
-        faces_str = ';'.join(lines).strip()
-        faces_str = faces_str.replace(' ', '').replace('),(', ');(')
+        faces_str = ';'.join(lines).strip().replace('\n', '').replace(' ', '')
+        while ';;' in faces_str:
+            faces_str = faces_str.replace(';;', ';')
+        faces_str = faces_str.replace('),(', ');(').replace(')(', ');(').strip()
 
         # Separate all input faces
         faces = faces_str.split(';')
