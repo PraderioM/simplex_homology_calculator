@@ -18,6 +18,8 @@ def read_file(file_path: str) -> List[Face]:
         while ';;' in faces_str:
             faces_str = faces_str.replace(';;', ';')
         faces_str = faces_str.replace('),(', ');(').replace(')(', ');(').strip()
+        if faces_str[-1] == ';':
+            faces_str = faces_str[:-1]
 
         # Separate all input faces
         faces = faces_str.split(';')
