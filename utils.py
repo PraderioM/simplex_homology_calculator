@@ -1,5 +1,5 @@
-from typing import List, Tuple
 from itertools import groupby
+from typing import List, Tuple
 
 from sympy import Matrix
 
@@ -79,7 +79,7 @@ def get_conversion_matrix(list_vectors: List[List[Tuple[int, Face]]],
                           max_vertex: int) -> Matrix:
     conversion_matrix = []
     for vector in list_vectors:
-        column = [0]*len(all_indexes)
+        column = [0] * len(all_indexes)
         for factor, face in vector:
             index = face.standard_basis_index(max_vertex=max_vertex)
             index = all_indexes.index(index)
@@ -104,9 +104,9 @@ class Basis:
         self._reduced_basis_indexes = self._basis_indexes
         self._reduced_conversion_matrix = self._conversion_matrix
         for i in range(self._conversion_matrix.rows - self._conversion_matrix.cols):
-            candidate_matrix = self._conversion_matrix[i: i+self._conversion_matrix.cols, :]
+            candidate_matrix = self._conversion_matrix[i: i + self._conversion_matrix.cols, :]
             if candidate_matrix.det() != 0:
-                self._reduced_basis_indexes = self._basis_indexes[i: i+self._conversion_matrix.cols]
+                self._reduced_basis_indexes = self._basis_indexes[i: i + self._conversion_matrix.cols]
                 self._reduced_conversion_matrix = candidate_matrix
                 break
 
@@ -116,7 +116,7 @@ class Basis:
         chain = [(factor, face.standard_basis_index(self.max_vertex)) for factor, face in chain]
         chain = [(factor, index) for factor, index in chain if index in self._reduced_basis_indexes]
 
-        standard_basis_chain = [0]*len(self._reduced_basis_indexes)
+        standard_basis_chain = [0] * len(self._reduced_basis_indexes)
         for coefficient, index in chain:
             index = self._reduced_basis_indexes.index(index)
             standard_basis_chain[index] = coefficient
