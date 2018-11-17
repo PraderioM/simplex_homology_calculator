@@ -59,10 +59,7 @@ class GUI(tk.Frame):
             self._output_path.set(path)
 
     def _compute_homology(self):
-        print('Hi')
         maximal_faces = read_file(file_path=self._input_path_entry.get())
-        print(maximal_faces)
         homology_groups = get_homology_groups(faces=maximal_faces)
-        print(homology_groups)
         print_homology_groups(homology_groups=homology_groups,
                               file_path=self._output_path_entry.get())
