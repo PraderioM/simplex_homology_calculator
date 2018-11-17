@@ -7,12 +7,7 @@ from utils import Face, Group, are_same_face, Basis, get_all_indexes, get_conver
 
 
 def get_homology_groups(faces: List[Face]) -> List[Group]:
-    max_vertex = get_max_vertex(faces=faces)
-
-    all_faces = get_all_faces(faces=faces)
-
-    simplicial_complex = gather_faces_by_length(all_faces)
-
+    simplicial_complex, max_vertex = get_simplicial_complex(faces=faces)
     kernels_basis = get_kernels_basis(simplicial_complex=simplicial_complex, max_vertex=max_vertex)
     images_basis = get_images(simplicial_complex=simplicial_complex)
     connection_matrices = get_connection_matrices(kernels_basis=kernels_basis,
@@ -21,6 +16,15 @@ def get_homology_groups(faces: List[Face]) -> List[Group]:
     kernel_dims = [kernel.dim() for kernel in kernels_basis]
     diagonals = diagonalize_matrices(matrices=connection_matrices, kernel_dims=kernel_dims)
     return [Group(diagonal) for diagonal in diagonals]
+
+
+def get_simplicial_complex(faces: List[Face]) -> Tuple[List[List[Face]], int]:
+    max_vertex = get_max_vertex(faces=faces)
+
+    all_faces = get_all_faces(faces=faces)
+    simplicial_complex = gather_faces_by_length(all_faces)
+
+    return simplicial_complex, max_vertex
 
 
 def get_max_vertex(faces: List[Face]) -> int:
