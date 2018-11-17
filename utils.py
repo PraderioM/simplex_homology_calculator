@@ -124,6 +124,9 @@ class Basis:
         standard_basis_chain = Matrix([standard_basis_chain]).transpose()
         return self._standard_to_basis_conversion * standard_basis_chain
 
+    def dim(self) -> int:
+        return len(self.basis)
+
 
 class Group:
     def __init__(self, group: List[int]):
