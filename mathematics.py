@@ -18,7 +18,8 @@ def get_homology_groups(faces: List[Face]) -> List[Group]:
     connection_matrices = get_connection_matrices(kernels_basis=kernels_basis,
                                                   images=images_basis)
 
-    diagonals = diagonalize_matrices(matrices=connection_matrices)
+    kernel_dims = [kernel.dim() for kernel in kernels_basis]
+    diagonals = diagonalize_matrices(matrices=connection_matrices, kernel_dims=kernel_dims)
     return [Group(diagonal) for diagonal in diagonals]
 
 
@@ -151,17 +152,19 @@ def get_connection_matrices(kernels_basis: List[Basis],
     return output
 
 
-def diagonalize_matrices(matrices: List[Matrix]) -> List[List[int]]:
-    return [diagonalize_matrix(matrix) for matrix in matrices]
+def diagonalize_matrices(matrices: List[Matrix], kernel_dims: List[int]) -> List[List[int]]:
+    return [diagonalize_matrix(matrix, kernel_dim) for matrix, kernel_dim in zip(matrices, kernel_dims)]
 
 
-def diagonalize_matrix(matrix: Matrix, _recurrent: Optional[List[int]] = None) -> List[int]:
+def diagonalize_matrix(matrix: Matrix, kernel_dim: int, _recurrent: Optional[List[int]] = None) -> List[int]:
     if _recurrent is None:
         _recurrent = []
 
     matrix_dim = min(matrix.rows, matrix.cols)
     if matrix_dim == 0:
-        return _recurrent
+        # We add all non considered dimensions.
+        output = _recurrent + [0]*(kernel_dim - len(_recurrent))
+        return output
 
     # Make sure first element of each row is positive
     def process_matrix(m: Matrix) -> Matrix:
@@ -181,7 +184,7 @@ def diagonalize_matrix(matrix: Matrix, _recurrent: Optional[List[int]] = None) -
 
     _recurrent.append(value)
 
-    return diagonalize_matrix(matrix=processed_matrix, _recurrent=_recurrent)
+    return diagonalize_matrix(matrix=processed_matrix, kernel_dim=kernel_dim, _recurrent=_recurrent)
 
 
 def reduction_on_first_element(matrix: Matrix) -> Tuple[Matrix, int]:
