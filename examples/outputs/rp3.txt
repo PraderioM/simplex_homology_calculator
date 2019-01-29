@@ -1,0 +1,5 @@
+H0:	Z
+H1:	Z/(2)
+H2:	0
+H3:	Z
+Hi:	0	for i greater or equal to 4
