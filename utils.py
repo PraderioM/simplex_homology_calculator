@@ -101,14 +101,22 @@ class Basis:
                                                         all_indexes=self._basis_indexes,
                                                         max_vertex=max_vertex)
 
+        # Get linearly independent columns rows matrix.
         self._reduced_basis_indexes = self._basis_indexes
         self._reduced_conversion_matrix = self._conversion_matrix
-        for i in range(self._conversion_matrix.rows - self._conversion_matrix.cols):
-            candidate_matrix = self._conversion_matrix[i: i + self._conversion_matrix.cols, :]
-            if candidate_matrix.det() != 0:
-                self._reduced_basis_indexes = self._basis_indexes[i: i + self._conversion_matrix.cols]
-                self._reduced_conversion_matrix = candidate_matrix
-                break
+
+        # If matrix is square all rows are linearly independent.
+        if self._reduced_conversion_matrix.cols != self._reduced_conversion_matrix.rows:
+            # Else we get the linearly independent rows.
+            _, li_rows_indexes = self._conversion_matrix.T.rref()
+            # Use the found rows to fill the reduced conversion matrix.
+            self._reduced_basis_indexes = []
+            self._reduced_conversion_matrix = []
+            for i in li_rows_indexes:
+                self._reduced_basis_indexes.append(self._basis_indexes[i])
+                self._reduced_conversion_matrix.append(list(self._conversion_matrix[i, :]))
+
+            self._reduced_conversion_matrix = Matrix(self._reduced_conversion_matrix)
 
         self._standard_to_basis_conversion = self._reduced_conversion_matrix.inv()
 
