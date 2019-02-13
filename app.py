@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request
 
 from input_output import read_raw_data, get_homology_groups_formatted_text
 from mathematics import get_homology_groups
@@ -16,11 +16,6 @@ def index():
 @app.route('/label.js')
 def label_js():
     return render_template('label.js')
-
-
-@app.route('/app-browser.js')
-def browser_js():
-    return render_template('app-browser.js')
 
 
 @app.route('/readData', methods=['POST'])
