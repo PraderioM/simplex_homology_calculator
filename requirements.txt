@@ -1,1 +1,9 @@
 sympy
+reportlab==3.4.0
+Flask==0.12
+itsdangerous==0.24
+Jinja2==2.8
+MarkupSafe==0.23
+Werkzeug==0.12.2
+gunicorn==19.7.1
+tex==1.8

@@ -2,6 +2,9 @@ import os
 
 from flask import Flask, render_template, request, make_response
 
+from input_output import read_raw_data, get_homology_groups_formatted_text
+from mathematics import get_homology_groups
+
 app = Flask(__name__)
 
 
@@ -20,36 +23,19 @@ def browser_js():
     return render_template('app-browser.js')
 
 
-@app.route('/downloadData', methods=['POST'])
+@app.route('/readData', methods=['POST'])
 def generate_data():
-    label_init = request.args.get('label_init')
-    last_labeled = request.args.get('last_labeled')
-    labels = request.args.get('labels').split(';')
-    images = request.args.get('images').split(';')
+    # Maximal faces are the only element sent by the form.
+    maximal_faces = ''
+    for data in request.form:
+        maximal_faces = data
 
-    text = 'LAST_LABELED='+last_labeled+'\n'
-    text += 'LABEL_INIT='+label_init+'\n'
+    # Make computations.
+    maximal_faces = read_raw_data(raw_data=maximal_faces)
+    homology_groups = get_homology_groups(faces=maximal_faces)
+    text = get_homology_groups_formatted_text(homology_groups=homology_groups)
 
-    label_init = int(label_init)
-    last_labeled = int(last_labeled)
-
-    for i in range(label_init):
-        text = text + '<image file="{}" state="corrected" text="{}" />\n'.format(images[i], labels[i])
-        i += 1
-
-    for i in range(label_init, last_labeled+1):
-        text = text + '<image file="{}" state="corrected" text="{}" />\n'.format(images[i], labels[i])
-        i += 1
-
-    for i in range(last_labeled+1, len(images)):
-        text = text + '<image file="{}" state="new" text="{}" />\n'.format(images[i], labels[i])
-        i += 1
-
-    text += '\n'
-    response = make_response(text)
-    response.headers['Content-Disposition'] = "attachment; filename='data.txt'"
-    response.mimetype = 'text/plain'
-    return response
+    return text
 
 
 if __name__ == '__main__':
