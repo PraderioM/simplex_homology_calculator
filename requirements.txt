@@ -4,6 +4,6 @@ reportlab==3.4.0
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
-Werkzeug==0.15.3
+Werkzeug==0.16.0
 gunicorn==19.7.1
 tex==1.8
