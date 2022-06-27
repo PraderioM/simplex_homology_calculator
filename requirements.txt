@@ -1,6 +1,6 @@
 sympy
 Flask==1.0.0
-reportlab==3.4.0
+reportlab==3.5.55
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
